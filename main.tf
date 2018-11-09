@@ -247,6 +247,12 @@ resource "azurerm_public_ip" "vm" {
   domain_name_label            = "${element(var.public_ip_dns, count.index)}"
 }
 
+data "azurerm_public_ip" "vm" {
+  depends_on           = ["azurerm_virtual_machine.vm-linux", "azurerm_virtual_machine.vm-linux-with-datadisk","azurerm_virtual_machine.vm-windows","azurerm_virtual_machine.vm-windows-with-datadisk"]
+  resource_group_name  = "${azurerm_resource_group.vm.name}"
+  name                 = "${azurerm_public_ip.vm.name}"
+}
+
 resource "azurerm_network_security_group" "vm" {
   name                = "${var.vm_hostname}-${coalesce(var.remote_port,module.os.calculated_remote_port)}-nsg"
   location            = "${azurerm_resource_group.vm.location}"
@@ -279,4 +285,18 @@ resource "azurerm_network_interface" "vm" {
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = "${length(azurerm_public_ip.vm.*.id) > 0 ? element(concat(azurerm_public_ip.vm.*.id, list("")), count.index) : ""}"
   }
+}
+
+resource "azurerm_virtual_machine_extension" "vm" {
+  depends_on           = ["azurerm_virtual_machine.vm-linux", "azurerm_virtual_machine.vm-linux-with-datadisk","azurerm_virtual_machine.vm-windows","azurerm_virtual_machine.vm-windows-with-datadisk"]
+  name                 = "vmext-${var.vm_hostname}${count.index}"
+  location             = "${azurerm_resource_group.vm.location}"
+  resource_group_name  = "${azurerm_resource_group.vm.name}"
+  virtual_machine_name = "${var.vm_hostname}${count.index}"
+  publisher            = "${var.vm_extension_publisher}"
+  type                 = "${var.vm_extension_type}"
+  type_handler_version = "${var.vm_extension_version}"
+  tags                 = "${var.tags}"
+  settings             = "${jsonencode(var.vm_extension_settings)}"
+  protected_settings   = "${jsonencode(var.vm_extension_protectedsettings)}"
 }
