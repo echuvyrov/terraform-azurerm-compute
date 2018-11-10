@@ -288,6 +288,7 @@ resource "azurerm_network_interface" "vm" {
 }
 
 resource "azurerm_virtual_machine_extension" "vm" {
+  count                = "${length(var.vm_extension_type) > 0 ? 1 : 0}"
   depends_on           = ["azurerm_virtual_machine.vm-linux", "azurerm_virtual_machine.vm-linux-with-datadisk","azurerm_virtual_machine.vm-windows","azurerm_virtual_machine.vm-windows-with-datadisk"]
   name                 = "vmext-${var.vm_hostname}${count.index}"
   location             = "${azurerm_resource_group.vm.location}"

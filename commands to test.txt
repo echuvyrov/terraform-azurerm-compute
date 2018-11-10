@@ -1,0 +1,9 @@
+export ARM_SUBSCRIPTION_ID=eb6659ac-634f-4460-8e5c-c92db0afcabb
+export ARM_CLIENT_ID=ed2e94bd-18f7-42ce-a61a-82e0ba6c1177
+export ARM_CLIENT_SECRET=kTVjgJGnPVd2k0tRGb1WbexZC3CDgZtJib9QJ3/UkgU=
+export ARM_TENANT_ID=72f988bf-86f1-41af-91ab-2d7cd011db47
+
+
+docker build --build-arg BUILD_ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID --build-arg BUILD_ARM_CLIENT_ID=$ARM_CLIENT_ID --build-arg BUILD_ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET --build-arg BUILD_ARM_TENANT_ID=$ARM_TENANT_ID -t azure-compute .
+
+docker run --rm azure-compute /bin/bash -c "bundle install && rake build"
