@@ -15,7 +15,11 @@ module "linuxservers" {
   vnet_subnet_id               = "${module.network.vnet_subnets[0]}"
   ssh_key                      = "${var.ssh_key}"
   resource_group_name          = "${var.resource_group_name}"
-}
+  vm_extension_type            =  "CustomScriptExtension"
+  vm_extension_publisher       =  "Microsoft.Compute"
+  vm_extension_version         =  "1.8"
+  vm_extension_settings        =  {commandToExecute = "top"}
+  }
 
 module "network" {
   version             = "2.0.0"

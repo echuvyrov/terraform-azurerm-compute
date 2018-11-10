@@ -91,6 +91,32 @@ variable "vm_os_version" {
   default     = "latest"
 }
 
+variable "vm_extension_type" {
+  description = "The vm extension type to be installed at the VM."
+  default     = ""
+}
+
+variable "vm_extension_publisher" {
+  description = "(Optional)The vm extension publisher."
+  default     = ""
+}
+
+variable "vm_extension_version" {
+  description = "The vm extension version."
+  default     = ""
+}
+variable "vm_extension_settings" {
+  type        = "map"
+  description = "A map of the settings that will be used for the vm extension."
+  default     = {}
+}
+
+variable "vm_extension_protectedsettings" {
+  type        = "map"
+  description = "A map of the protected settings that will be used for the vm extension."
+  default     = {}
+}
+
 variable "tags" {
   type        = "map"
   description = "A map of the tags to use on the resources that are deployed with this module."

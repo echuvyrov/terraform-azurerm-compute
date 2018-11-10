@@ -11,6 +11,7 @@ This Terraform module deploys Virtual Machines in Azure with the following chara
 - Network Security Group (NSG) created with a single remote access rule which opens `var.remote_port` port or auto calculated port number if using `var.vm_os_simple` to all nics
 - VM nics attached to a single virtual network subnet of your choice (new or existing) via `var.vnet_subnet_id`.
 - Control the number of Public IP addresses assigned to VMs via `var.nb_public_ip`. Create and attach one Public IP per VM up to the number of VMs or create NO public IPs via setting `var.nb_public_ip` to `0`.
+- Apply [VM extension](https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/overview)
 
 > Note: Terraform module registry is incorrect in the number of required parameters since it only deems required based on variables with non-existent values.  The actual minimum required variables depends on the configuration and is specified below in the usage.
 
@@ -103,6 +104,10 @@ More specifically this provisions:
                             environment = "dev"
                             costcenter  = "it"
                           }
+    vm_extension_type            =  "CustomScriptExtension"
+    vm_extension_publisher       =  "Microsoft.Compute"
+    vm_extension_version         =  "1.8"
+    vm_extension_settings        =  {commandToExecute = "top"}
   }
 
   module "windowsservers" {
